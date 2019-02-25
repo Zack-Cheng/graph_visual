@@ -1,81 +1,57 @@
 ﻿using GraphVisual.GraphD;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace GraphVisual.Algorithm
 {
-    class GirvanNewmanImprovement : IAlgorithm
+    public class GirvanNewmanImprovement : IAlgorithm
     {
-        Dictionary<Edge, double> edgeBetweenness;
-        CommunityStructure Cs;
-        DGraph graph;
-
-        double _BestQ, Q;
+        private Dictionary<Edge, double> edgeBetweenness;
+        private CommunityStructure Cs;
+        private DGraph graph;
+        private double _BestQ, Q;
 
         public double BestQ
         {
-            get { return _BestQ; }
-            set { _BestQ = value; }
-        }
-
-        private RichTextBox _Log;
-
-        public RichTextBox Log
-        {
-            get { return _Log; }
-            set { _Log = value; }
+            get => _BestQ;
+            set => _BestQ = value;
         }
 
         private void WriteLog(string log = "")
         {
-            _Log.Text += log + "\r\n";
-            _Log.Refresh();
+            Debug.WriteLine(log);
         }
 
         public CommunityStructure FindCommunityStructure(DGraph pGraph)
         {
-            // Clone graph này ra để xử lý
             graph = pGraph.Clone();
 
-            // Cộng đồng
             CommunityStructure tempCS = GetCommunityStructure();
 
-            // Số cộng đồng
             int initCount = tempCS.Count;
             int countCommunity = initCount;
 
-            // Q
-            _BestQ = 0;
             Q = 0;
 
-            // Tính edge betweenness lần đầu
             CalculateEdgeBetweenness(tempCS);
-
-            // tính thuật toán
-            int j = 0;
+            _BestQ = CalculateModularity(tempCS, graph);
+            Cs = tempCS;
             while (true)
             {
                 while (countCommunity <= initCount)
                 {
-                    WriteLog("Xóa lần " + j.ToString()); j++;
-                    // Xóa cạnh có edge betweenness lớn nhất
-                    List<DGraph> communities = RemoveMaxEdgeBetweenness(tempCS); // Xóa cạnh lớn nhất và cho biết community nào có cạnh được xóa
+                    List<DGraph> communities = RemoveMaxEdgeBetweenness(tempCS);
 
-                    // Tính lại Edgebetweenness
                     CalculateEdgeBetweenness(tempCS, communities);
 
-                    // Đếm lại số cộng đồng
                     tempCS = GetCommunityStructure();
                     countCommunity = tempCS.Count;
                 }
 
                 initCount = countCommunity;
 
-                // Tính Q
                 Q = CalculateModularity(tempCS, pGraph);
                 if (Q > _BestQ)
                 {
@@ -83,10 +59,13 @@ namespace GraphVisual.Algorithm
                     Cs = tempCS;
                 }
 
-                if (graph.Edges.Count == 0) break;
+                if (graph.Edges.Count == 0)
+                {
+                    break;
+                }
             }
 
-            return this.Cs;
+            return Cs;
         }
 
         private double CalculateModularity(CommunityStructure pCs, DGraph pOriginalGraph)
@@ -95,8 +74,8 @@ namespace GraphVisual.Algorithm
             int numEdge = pOriginalGraph.Edges.Count;
             foreach (DGraph csItem in pCs)
             {
-                int l = 0; // tong bac cua dinh trong c, theo do thi moi => suy ra so canh
-                int d = 0; // tong bac
+                int l = 0;
+                int d = 0;
                 foreach (Node node in csItem.Nodes)
                 {
                     l += node.AdjacencyNodes.Count;
@@ -110,41 +89,35 @@ namespace GraphVisual.Algorithm
             return modularity;
         }
 
-        // Hàm xóa cạnh và trả về danh sách các subgraph có cạnh bị xóa 
-        // Nhằm tính lại edge betweenness
         private List<DGraph> RemoveMaxEdgeBetweenness(CommunityStructure pTempCS)
         {
-            var maxValue = edgeBetweenness.Max(u => u.Value);
+            double maxValue = edgeBetweenness.Max(u => u.Value);
             List<Edge> lstEdge = (from e in edgeBetweenness
                                   where e.Value == maxValue
                                   select e.Key).ToList();
 
             List<DGraph> lstGraph = new List<DGraph>();
 
-            // Xóa tất cả các cạnh này
             foreach (Edge e in lstEdge)
             {
-                // xoa canh trong do thi
                 graph.Edges.Remove(e);
 
-                // Xoa canh ke trong nut
                 e.NodeA.AdjacencyEdges.Remove(e);
                 e.NodeB.AdjacencyEdges.Remove(e);
 
-                // Xoa nut ke
                 e.NodeA.AdjacencyNodes.Remove(e.NodeB);
                 e.NodeB.AdjacencyNodes.Remove(e.NodeA);
 
                 WriteLog(" - Remove: (" + e.NodeA.Label + ", " + e.NodeB.Label + ")\t" + edgeBetweenness[e].ToString("0.00"));
 
-                // xoa edgebetweenness
                 edgeBetweenness.Remove(e);
 
-                // tim cong dong
                 foreach (DGraph subgraph in pTempCS)
                 {
                     if (subgraph.Nodes.Contains(e.NodeA))
+                    {
                         lstGraph.Add(subgraph);
+                    }
                 }
             }
 
@@ -180,7 +153,11 @@ namespace GraphVisual.Algorithm
 
         private void _CalculateEdgeBetweenness(DGraph subgraph)
         {
-            if (subgraph == null) return;
+            if (subgraph == null)
+            {
+                return;
+            }
+
             int n = subgraph.Nodes.Count;
             int MAX = int.MaxValue;
 
@@ -202,7 +179,6 @@ namespace GraphVisual.Algorithm
                 Dictionary<Node, int> sigma = new Dictionary<Node, int>();
                 Dictionary<Node, double> delta = new Dictionary<Node, double>();
 
-                // initialization
                 foreach (Node d in subgraph.Nodes)
                 {
                     dist.Add(d, MAX);
@@ -215,13 +191,11 @@ namespace GraphVisual.Algorithm
                 sigma[s] = 1;
                 Q.Enqueue(s);
 
-                // while
                 while (Q.Count != 0)
                 {
                     Node v = Q.Dequeue();
                     S.Push(v);
 
-                    // sửa chỗ này lại, không duyệt hết mà chỉ duyệt 1 số thôi
                     foreach (Node w in v.AdjacencyNodes)
                     {
                         if (dist[w] == MAX)
@@ -237,7 +211,6 @@ namespace GraphVisual.Algorithm
                     }
                 }
 
-                // accumuation
                 while (S.Count != 0)
                 {
                     Node w = S.Pop();
@@ -245,7 +218,6 @@ namespace GraphVisual.Algorithm
                     {
                         double c = ((double)(sigma[v]) / sigma[w]) * (1.0 + delta[w]);
 
-                        // tim canh
                         Edge e = graph.FindEdge(v, w);
                         edgeBetweenness[e] += c;
 

@@ -1,14 +1,11 @@
 ﻿using GraphVisual.Drawing;
 using GraphVisual.GraphD;
+using GraphVisual.TreeLib;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GraphVisual.TreeLib;
-using System.IO;
-using System.Windows.Forms;
 
 namespace GraphVisual.Algorithm
 {
@@ -18,55 +15,55 @@ namespace GraphVisual.Algorithm
 
         public Dictionary<Node, double> VertexBetweenness
         {
-            set { _vertexBetweenness = value; }
+            set => _vertexBetweenness = value;
         }
 
         private DGraph _Graph;
 
         public DGraph Graph
         {
-            get { return _Graph; }
-            set { _Graph = value; }
+            get => _Graph;
+            set => _Graph = value;
         }
 
         private Node _Vertex;
 
         public Node Vertex
         {
-            get { return _Vertex; }
-            set { _Vertex = value; }
+            get => _Vertex;
+            set => _Vertex = value;
         }
 
         private string _Split;
 
         public string Split
         {
-            get { return _Split; }
-            set { _Split = value; }
+            get => _Split;
+            set => _Split = value;
         }
 
         private double _SplitBetweenness;
 
         public double SplitBetweenness
         {
-            get { return _SplitBetweenness; }
-            set { _SplitBetweenness = value; }
+            get => _SplitBetweenness;
+            set => _SplitBetweenness = value;
         }
 
         private List<Node> _Clique;
 
         public List<Node> Clique
         {
-            get { return _Clique; }
-            set { _Clique = value; }
+            get => _Clique;
+            set => _Clique = value;
         }
 
         private List<Edge> _Edges;
 
         public List<Edge> Edges
         {
-            get { return _Edges; }
-            set { _Edges = value; }
+            get => _Edges;
+            set => _Edges = value;
         }
 
         public PairBetweenness()
@@ -77,18 +74,18 @@ namespace GraphVisual.Algorithm
         }
 
         private Dictionary<Edge, double> _Values;
-            
+
         public Dictionary<Edge, double> Values
         {
-            get { return _Values; }
-            set { _Values = value; }
+            get => _Values;
+            set => _Values = value;
         }
 
         public void SetValue(Node pNodeA, Node pNodeB, double value)
         {
             foreach (Edge e in _Edges)
             {
-                if( (e.NodeA == pNodeA && e.NodeB == pNodeB) ||
+                if ((e.NodeA == pNodeA && e.NodeB == pNodeB) ||
                     (e.NodeA == pNodeB && e.NodeB == pNodeA))
                 {
                     _Values[e] += value;
@@ -109,71 +106,43 @@ namespace GraphVisual.Algorithm
 
         private void SortPairBetweenness()
         {
-            var list = _Values.Values.ToList();
+            List<double> list = _Values.Values.ToList();
             list.Sort();
         }
 
         public void CalculateSplitBetweenness()
         {
-            //int k = _Vertex.AdjacencyNodes.Count - 2; // bậc 
-
             while (_Clique.Count > 2)
             {
-                // Chọn cạnh có value min
-                /*
-                 * Chọn cạnh có value min
-                 * + u = e.NodeA
-                 * + w = e.NodeB
-                 */
                 Edge e = FindEdgeMinScore();
-                //Edge e = _Edges[_a];
-                /*
-                 * Gộp nút đó lại
-                 * + Gộp nút
-                 * + Xóa nút cũ khỏi clique
-                 * + Thêm nút mới vào clique
-                 */
-                Node uw = new Node();
-                uw.Label = e.NodeA.Label + "_" + e.NodeB.Label;
+                Node uw = new Node
+                {
+                    Label = e.NodeA.Label + "_" + e.NodeB.Label
+                };
 
-                // Xóa nút cũ
                 _Clique.Remove(e.NodeA);
                 _Clique.Remove(e.NodeB);
 
-                // Xoa canh do luon
                 _Edges.Remove(e);
                 _Values.Remove(e);
 
-                /*
-                 * Thay thế ux:b1, wx:b2 = uwx:b1+b2
-                 * + Tìm ux, wx
-                 * + Tạo cạnh uwx
-                 * + Xóa ux, wx khỏi edges
-                 * + Xóa ux, wx khỏi value (b)
-                 * + thêm cạnh uwx vào edges
-                 * + thêm cạnh uwx vào value
-                 */
                 foreach (Node x in _Clique)
                 {
                     Edge ux = FindEdge(e.NodeA, x);
                     Edge wx = FindEdge(e.NodeB, x);
                     Edge uwx = new Edge(uw, x);
 
-                    // Xóa 2 cạnh khỏi edges
                     _Edges.Remove(ux);
                     _Edges.Remove(wx);
 
-                    // Thêm cạnh 
                     _Edges.Add(uwx);
                     double b = _Values[ux] + _Values[wx];
                     _Values.Add(uwx, b);
 
-                    // Xoa 2 cạnh khởi value
                     _Values.Remove(ux);
                     _Values.Remove(wx);
                 }
 
-                // Thêm nút mới vòa clique
                 _Clique.Add(uw);
             }
 
@@ -189,7 +158,9 @@ namespace GraphVisual.Algorithm
             {
                 if ((e.NodeA == pNodeA && e.NodeB == pNodeB) ||
                     (e.NodeA == pNodeB && e.NodeB == pNodeA))
+                {
                     return e;
+                }
             }
 
             return null;
@@ -201,13 +172,15 @@ namespace GraphVisual.Algorithm
             {
                 if ((e.NodeA.Label == pLabelA && e.NodeB.Label == pLabelB) ||
                     (e.NodeA.Label == pLabelB && e.NodeB.Label == pLabelA))
+                {
                     return e;
+                }
             }
 
             return null;
         }
 
-        private Edge FindEdgeMinScore() 
+        private Edge FindEdgeMinScore()
         {
             Edge _e = null;
             double min = _Values.Values.ToList().Min();
@@ -226,7 +199,9 @@ namespace GraphVisual.Algorithm
                     Node b = Graph.FindNode(nodeBLabel[0]);
 
                     if ((a.AdjacencyNodes.Count + b.AdjacencyNodes.Count <= Vertex.AdjacencyNodes.Count))
+                    {
                         return e;
+                    }
                 }
             }
             return _e;
@@ -241,7 +216,11 @@ namespace GraphVisual.Algorithm
 
             foreach (Node x in _Clique)
             {
-                if (x == u || x == w) continue;
+                if (x == u || x == w)
+                {
+                    continue;
+                }
+
                 Edge ux = FindEdge(u, x);
                 Edge wx = FindEdge(w, x);
 
@@ -254,30 +233,19 @@ namespace GraphVisual.Algorithm
 
     public class Conga : IAlgorithm
     {
-        Dictionary<Edge, double> edgeBetweenness;
-        Dictionary<Node, double> vertexBetweenness;
+        private Dictionary<Edge, double> edgeBetweenness;
+        private Dictionary<Node, double> vertexBetweenness;
+        private CommunityStructure Cs;
+        private DGraph graph;
+        private DGraph originalGraph;
+        private double _BestVAD, _VAD;
+        private double _BestM, _M;
 
-        CommunityStructure Cs;
-        DGraph graph;
-        DGraph originalGraph;
+        public double BestVAD => _BestVAD;
 
-        double _BestVAD, _VAD;
-        double _BestM, _M;
+        public double BestM => _BestM;
 
-        public double BestVAD
-        {
-            get { return _BestVAD; }
-        }
-
-        public double BestM
-        {
-            get { return _BestM; }
-        }
-
-        public DGraph Graph
-        {
-            get { return graph; }
-        }
+        public DGraph Graph => graph;
 
         public int countSplit = 0;
 
@@ -285,59 +253,40 @@ namespace GraphVisual.Algorithm
 
         public bool UseVAD
         {
-            get { return _UseVAD; }
-            set { _UseVAD = value; }
-        }
-
-        private RichTextBox _Log;
-
-        public RichTextBox Log
-        {
-            get { return _Log; }
-            set { _Log = value; }
+            get => _UseVAD;
+            set => _UseVAD = value;
         }
 
         private void WriteLog(string log = "")
         {
-            _Log.Text += log + "\r\n";
-            _Log.Refresh();
+            Debug.WriteLine(log);
         }
 
         public CommunityStructure FindCommunityStructure(DGraph pGraph)
         {
-            // Clone graph này ra để xử lý
             originalGraph = pGraph;
             graph = pGraph.Clone();
 
-            // Cộng đồng
             CommunityStructure tempCS = GetCommunityStructure();
 
-            // Số cộng đồng
             int initCount = tempCS.Count;
             int countCommunity = initCount;
 
-            // Q
             _BestVAD = 0;
             _VAD = 0;
             _BestM = 0;
             _M = 0;
 
-            // Tính edge betweenness lần đầu
             CalculateEdgeBetweenness(tempCS);
             CalculateVertexBetweenness(tempCS);
 
             WriteLog("Start CONGA algorithm");
-            // tính thuật toán
             while (true)
             {
                 while (countCommunity <= initCount)
                 {
-                    // Tìm tập hợp các đỉnh có vertex betweenness lớn hơn max edge betweenness:
-                    // Thật chất là tìm max edge betweenness và max vertext betweenness
-                    // Xóa cạnh có edge betweenness lớn nhất
                     RemoveEdgeOrSplitVertex(tempCS);
 
-                    // Đếm lại số cộng đồng
                     tempCS = GetCommunityStructure();
 
                     countCommunity = tempCS.Count;
@@ -348,7 +297,6 @@ namespace GraphVisual.Algorithm
 
                 initCount = countCommunity;
 
-                // Tính Q = VAD
                 if (_UseVAD)
                 {
                     _VAD = CalculateVAD(tempCS);
@@ -358,7 +306,7 @@ namespace GraphVisual.Algorithm
                         _BestVAD = _VAD;
                         Cs = tempCS;
                     }
-                }   
+                }
                 else
                 {
                     _M = CalculateModularity(tempCS, originalGraph);
@@ -370,10 +318,13 @@ namespace GraphVisual.Algorithm
                     }
                 }
 
-                if (graph.Edges.Count == 0) break;
+                if (graph.Edges.Count == 0)
+                {
+                    break;
+                }
             }
 
-            return this.Cs;
+            return Cs;
         }
 
         private double CalculateVAD(CommunityStructure tempCS)
@@ -388,7 +339,7 @@ namespace GraphVisual.Algorithm
                 double temp_EC = 0;
                 foreach (Node node in cs.Nodes)
                 {
-                        temp_EC += node.AdjacencyEdges.Count;
+                    temp_EC += node.AdjacencyEdges.Count;
                 }
 
                 EC += temp_EC;
@@ -413,7 +364,6 @@ namespace GraphVisual.Algorithm
                 }
             }
 
-            // tìm danh sách các đỉnh có vertex betweenness lớn hơn max edge betweeness
             List<Node> CandidateNode = new List<Node>();
             foreach (KeyValuePair<Node, double> keypair in vertexBetweenness)
             {
@@ -429,28 +379,31 @@ namespace GraphVisual.Algorithm
             }
             else
             {
-                // tính split betweenness của các đỉnh trong danh sách trên
                 PairBetweenness maxSplitbetweenness = CalculatePairBetweenness(CandidateNode);
 
                 if (maxSplitbetweenness.SplitBetweenness >= maxEdge)
                 {
                     SplitVertex(maxSplitbetweenness, tempCS);
                 }
-                else RemoveEdge(e, tempCS);
+                else
+                {
+                    RemoveEdge(e, tempCS);
+                }
             }
         }
 
         private PairBetweenness CalculatePairBetweenness(List<Node> CandidateNode)
         {
             Dictionary<Node, PairBetweenness> pair = new Dictionary<Node, PairBetweenness>();
-            
-            // tạo clique của từng pair
+
             foreach (Node node in CandidateNode)
             {
-                PairBetweenness p = new PairBetweenness();
-                p.VertexBetweenness = this.vertexBetweenness;
-                p.Graph = this.graph;
-                p.Vertex = node;
+                PairBetweenness p = new PairBetweenness
+                {
+                    VertexBetweenness = vertexBetweenness,
+                    Graph = graph,
+                    Vertex = node
+                };
 
                 for (int i = 0; i < node.AdjacencyNodes.Count; i++)
                 {
@@ -465,14 +418,18 @@ namespace GraphVisual.Algorithm
                 pair.Add(node, p);
             }
 
-#region tinh_pair
+            #region tinh_pair
 
             for (int i = 0; i < graph.Nodes.Count; i++)
             {
                 Node a = graph.Nodes[i];
-                for (int j = 0; j < graph.Nodes.Count; j++) // điều này không tối ưu
+                for (int j = 0; j < graph.Nodes.Count; j++)
                 {
-                    if (i == j) continue;
+                    if (i == j)
+                    {
+                        continue;
+                    }
+
                     Node b = graph.Nodes[j];
                     List<List<TreeNode<Node>>> paths = GetAllShortestPath(graph, a, b);
                     double p = 1.0 / paths.Count;
@@ -490,7 +447,7 @@ namespace GraphVisual.Algorithm
                 }
             }
 
-#endregion tinh_pair
+            #endregion tinh_pair
 
             double max = double.MinValue;
             PairBetweenness maxPair = null;
@@ -518,16 +475,17 @@ namespace GraphVisual.Algorithm
             List<TreeNode<Node>> lstNode = lst;
             if (node.Prev == null)
             {
-                lstNode = new List<TreeNode<Node>>();
-                lstNode.Add(node);
+                lstNode = new List<TreeNode<Node>>
+                {
+                    node
+                };
             }
-                
+
             foreach (TreeNode<Node> nextnode in node.Next)
             {
                 lstNode.Add(nextnode);
                 GetShortestFromTree(pShortestList, nextnode, a, b, lstNode);
 
-                // New path complete
                 if (nextnode.Value == b)
                 {
                     List<TreeNode<Node>> path = new List<TreeNode<Node>>();
@@ -542,7 +500,6 @@ namespace GraphVisual.Algorithm
             }
         }
 
-
         private List<List<TreeNode<Node>>> GetAllShortestPath(DGraph subgraph, Node a, Node b)
         {
             Queue<Node> Q = new Queue<Node>();
@@ -550,7 +507,6 @@ namespace GraphVisual.Algorithm
 
             Dictionary<Node, int> dist = new Dictionary<Node, int>();
             int MAX = 9999;
-            // initialization
             foreach (Node d in subgraph.Nodes)
             {
                 dist.Add(d, MAX);
@@ -565,7 +521,6 @@ namespace GraphVisual.Algorithm
 
             Q_Tree.Enqueue(root);
 
-            // while
             while (Q.Count != 0)
             {
                 Node v = Q.Dequeue();
@@ -597,27 +552,24 @@ namespace GraphVisual.Algorithm
 
         private DGraph RemoveEdge(Edge e, CommunityStructure pTempCS)
         {
-            // xoa canh trong do thi
             graph.Edges.Remove(e);
 
-            // Xoa canh ke trong nut
             e.NodeA.AdjacencyEdges.Remove(e);
             e.NodeB.AdjacencyEdges.Remove(e);
 
-            // Xoa nut ke
             e.NodeA.AdjacencyNodes.Remove(e.NodeB);
             e.NodeB.AdjacencyNodes.Remove(e.NodeA);
 
             WriteLog("Remove: (" + e.NodeA.Label + ", " + e.NodeB.Label + ")\t" + edgeBetweenness[e].ToString("0.00"));
 
-            // xoa edgebetweenness
             edgeBetweenness.Remove(e);
 
-            // tim cong dong
             foreach (DGraph subgraph in pTempCS)
             {
                 if (subgraph.Nodes.Contains(e.NodeA))
+                {
                     return subgraph;
+                }
             }
             return null;
         }
@@ -630,39 +582,45 @@ namespace GraphVisual.Algorithm
 
             Node splitNode = pairBetweenness.Vertex;
 
-            // Tách nút splitNode thành 2 nút
             Node splitedNodeA = new Node(splitNode.Label + "-" + string.Join("-", labelA), new Point(splitNode.Location.X + Format.Setting.NodeSize, splitNode.Location.Y + Format.Setting.NodeSize));
             Node splitedNodeB = new Node(splitNode.Label + "-" + string.Join("-", labelB), new Point(splitNode.Location.X - Format.Setting.NodeSize, splitNode.Location.Y - Format.Setting.NodeSize));
 
             WriteLog("Split: " + splitedNodeA.Label + "/" + splitedNodeB.Label + "\t" + pairBetweenness.SplitBetweenness.ToString("0.00"));
 
-            // xóa nút splitNode
             graph.Nodes.Remove(splitNode);
             vertexBetweenness.Remove(splitNode);
 
-            // Thêm 2 nút mới tạo vào đồ thị
             graph.Nodes.Add(splitedNodeA);
             graph.Nodes.Add(splitedNodeB);
             vertexBetweenness.Add(splitedNodeA, 0);
             vertexBetweenness.Add(splitedNodeB, 0);
-            
+
             foreach (Edge e in splitNode.AdjacencyEdges)
             {
                 Edge newe = null;
                 if (labelA.Contains(e.NodeA.Label))
+                {
                     newe = graph.CreateLink(e.NodeA, splitedNodeA);
+                }
                 else if (labelA.Contains(e.NodeB.Label))
+                {
                     newe = graph.CreateLink(e.NodeB, splitedNodeA);
+                }
                 else if (labelB.Contains(e.NodeA.Label))
+                {
                     newe = graph.CreateLink(e.NodeA, splitedNodeB);
+                }
                 else if (labelB.Contains(e.NodeB.Label))
+                {
                     newe = graph.CreateLink(e.NodeB, splitedNodeB);
+                }
 
                 graph.Edges.Remove(e);
                 edgeBetweenness.Remove(e);
                 edgeBetweenness.Add(newe, 0);
 
-                if (e.NodeA != splitNode) {
+                if (e.NodeA != splitNode)
+                {
                     e.NodeA.AdjacencyEdges.Remove(e);
                     e.NodeA.AdjacencyNodes.Remove(splitNode);
                 }
@@ -676,7 +634,9 @@ namespace GraphVisual.Algorithm
             foreach (DGraph subgraph in pTempCS)
             {
                 if (subgraph.Nodes.Contains(splitNode))
+                {
                     return subgraph;
+                }
             }
             return null;
         }
@@ -693,17 +653,21 @@ namespace GraphVisual.Algorithm
             }
 
             if (community != null)
+            {
                 _CalculateVertexBetweenness(community);
+            }
             else
+            {
                 foreach (DGraph subgraph in tempCS)
                 {
                     _CalculateVertexBetweenness(subgraph);
                 }
+            }
         }
 
         private void _CalculateVertexBetweenness(DGraph subgraph)
         {
-            int n = subgraph.Nodes.Count; // số đỉnh của cộng đồng chứa node
+            int n = subgraph.Nodes.Count;
 
             foreach (Node node in subgraph.Nodes)
             {
@@ -716,31 +680,6 @@ namespace GraphVisual.Algorithm
 
                 vertexBetweenness[node] = (vb / 2) - (n - 1);
             }
-
-            //for (int i = 0; i < subgraph.Nodes.Count; i++)
-            //{
-            //    Node a = subgraph.Nodes[i];
-            //    for (int j = 0; j < subgraph.Nodes.Count; j++)
-            //    {
-            //        Node b = subgraph.Nodes[j];
-            //        List<List<TreeNode<Node>>> paths = GetAllShortestPath(graph, a, b);
-            //        double p = 1.0 / paths.Count;
-            //        foreach (List<TreeNode<Node>> path in paths)
-            //        {
-            //            for (int _i = 1; _i < path.Count - 1; _i++)
-            //            {
-            //                vertexBetweenness[path[_i].Value] += p;
-            //            }
-            //        }
-            //    }
-            //}
-
-            //// in vertex betweenness
-            //foreach (Node node in graph.Nodes)
-            //{
-            //    Console.WriteLine(node.Label + ": " + vertexBetweenness[node]);
-            //}
-
         }
 
         private double CalculateModularity(CommunityStructure pCs, DGraph pOriginalGraph)
@@ -749,8 +688,8 @@ namespace GraphVisual.Algorithm
             int numEdge = pOriginalGraph.Edges.Count;
             foreach (DGraph csItem in pCs)
             {
-                int l = 0; // tong bac cua dinh trong c, theo do thi moi => suy ra so canh
-                int d = 0; // tong bac
+                int l = 0;
+                int d = 0;
                 foreach (Node node in csItem.Nodes)
                 {
                     l += node.AdjacencyNodes.Count;
@@ -760,7 +699,10 @@ namespace GraphVisual.Algorithm
                         string[] temp_label = node.Label.Split('-');
                         d += pOriginalGraph.FindNode(temp_label[0], false).AdjacencyNodes.Count;
                     }
-                    else d += pOriginalGraph.FindNode(node.Label, false).AdjacencyNodes.Count;
+                    else
+                    {
+                        d += pOriginalGraph.FindNode(node.Label, false).AdjacencyNodes.Count;
+                    }
                 }
 
                 l /= 2;
@@ -782,7 +724,9 @@ namespace GraphVisual.Algorithm
             }
 
             if (community != null)
+            {
                 _CalculateEdgeBetweenness(community);
+            }
             else
             {
                 foreach (DGraph subg in pCS)
@@ -794,7 +738,11 @@ namespace GraphVisual.Algorithm
 
         private void _CalculateEdgeBetweenness(DGraph subgraph)
         {
-            if (subgraph == null) return;
+            if (subgraph == null)
+            {
+                return;
+            }
+
             int n = subgraph.Nodes.Count;
             int MAX = 9999;
 
@@ -816,7 +764,6 @@ namespace GraphVisual.Algorithm
                 Dictionary<Node, int> sigma = new Dictionary<Node, int>();
                 Dictionary<Node, double> delta = new Dictionary<Node, double>();
 
-                // initialization
                 foreach (Node d in subgraph.Nodes)
                 {
                     dist.Add(d, MAX);
@@ -829,13 +776,11 @@ namespace GraphVisual.Algorithm
                 sigma[s] = 1;
                 Q.Enqueue(s);
 
-                // while
                 while (Q.Count != 0)
                 {
                     Node v = Q.Dequeue();
                     S.Push(v);
 
-                    // sửa chỗ này lại, không duyệt hết mà chỉ duyệt 1 số thôi
                     foreach (Node w in v.AdjacencyNodes)
                     {
                         if (dist[w] == MAX)
@@ -851,17 +796,23 @@ namespace GraphVisual.Algorithm
                     }
                 }
 
-                // accumuation
                 while (S.Count != 0)
                 {
                     Node w = S.Pop();
-                    if (s == w) continue;
+                    if (s == w)
+                    {
+                        continue;
+                    }
+
                     foreach (Node v in pred[w])
                     {
                         double c = ((double)(sigma[v]) / sigma[w]) * (1.0 + delta[w]);
 
                         Edge _e = graph.FindEdge(w, v);
-                        if(_e != null) edgeBetweenness[_e] += c;
+                        if (_e != null)
+                        {
+                            edgeBetweenness[_e] += c;
+                        }
 
                         delta[v] += c;
                     }

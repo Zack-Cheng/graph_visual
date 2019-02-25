@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace GraphVisual.GraphD
 {
     public class Clique
     {
-        public List<Node> Nodes; // danh sach cac node trong clique
+        public List<Node> Nodes;
 
         public Clique()
         {

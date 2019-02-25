@@ -20,3 +20,14 @@ F:\solution\Old\GraphVisual\GraphVisual\obj\Release\GraphVisual.frmSetting.resou
 F:\solution\Old\GraphVisual\GraphVisual\obj\Release\GraphVisual.Properties.Resources.resources
 F:\solution\Old\GraphVisual\GraphVisual\obj\Release\GraphVisual.csproj.GenerateResource.Cache
 F:\solution\Old\GraphVisual\GraphVisual\bin\Release\GraphVisual.pdb
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\bin\Release\GraphVisual.exe.config
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\bin\Release\GraphVisual.exe
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\bin\Release\GraphVisual.pdb
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\obj\Release\GraphVisual.csprojAssemblyReference.cache
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\obj\Release\GraphVisual.DrawingSpace.resources
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\obj\Release\GraphVisual.frmMain.resources
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\obj\Release\GraphVisual.Properties.Resources.resources
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\obj\Release\GraphVisual.csproj.GenerateResource.cache
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\obj\Release\GraphVisual.csproj.CoreCompileInputs.cache
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\obj\Release\GraphVisual.exe
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\obj\Release\GraphVisual.pdb

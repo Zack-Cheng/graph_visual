@@ -31,3 +31,37 @@ E:\Projects\solution\Old\GraphVisual\GraphVisual\obj\Debug\GraphVisual.frmMain.r
 E:\Projects\solution\Old\GraphVisual\GraphVisual\obj\Debug\GraphVisual.frmSetting.resources
 E:\Projects\solution\Old\GraphVisual\GraphVisual\obj\Debug\GraphVisual.Properties.Resources.resources
 E:\Projects\solution\Old\GraphVisual\GraphVisual\obj\Debug\GraphVisual.csproj.GenerateResource.Cache
+C:\Users\user\Downloads\新增資料夾\graph_visual-master (1)\graph_visual-master\GraphVisual\bin\Debug\GraphVisual.exe.config
+C:\Users\user\Downloads\新增資料夾\graph_visual-master (1)\graph_visual-master\GraphVisual\bin\Debug\GraphVisual.exe
+C:\Users\user\Downloads\新增資料夾\graph_visual-master (1)\graph_visual-master\GraphVisual\bin\Debug\GraphVisual.pdb
+C:\Users\user\Downloads\新增資料夾\graph_visual-master (1)\graph_visual-master\GraphVisual\obj\Debug\GraphVisual.DrawingSpace.resources
+C:\Users\user\Downloads\新增資料夾\graph_visual-master (1)\graph_visual-master\GraphVisual\obj\Debug\GraphVisual.frmMain.resources
+C:\Users\user\Downloads\新增資料夾\graph_visual-master (1)\graph_visual-master\GraphVisual\obj\Debug\GraphVisual.frmSetting.resources
+C:\Users\user\Downloads\新增資料夾\graph_visual-master (1)\graph_visual-master\GraphVisual\obj\Debug\GraphVisual.Properties.Resources.resources
+C:\Users\user\Downloads\新增資料夾\graph_visual-master (1)\graph_visual-master\GraphVisual\obj\Debug\GraphVisual.csproj.GenerateResource.cache
+C:\Users\user\Downloads\新增資料夾\graph_visual-master (1)\graph_visual-master\GraphVisual\obj\Debug\GraphVisual.csproj.CoreCompileInputs.cache
+C:\Users\user\Downloads\新增資料夾\graph_visual-master (1)\graph_visual-master\GraphVisual\obj\Debug\GraphVisual.exe
+C:\Users\user\Downloads\新增資料夾\graph_visual-master (1)\graph_visual-master\GraphVisual\obj\Debug\GraphVisual.pdb
+C:\Users\user\Downloads\新增資料夾\graph_visual-master (1)\graph_visual-master\GraphVisual\obj\Debug\GraphVisual.csprojAssemblyReference.cache
+C:\Users\user\Desktop\graph_visual-master\GraphVisual\obj\Debug\GraphVisual.csprojAssemblyReference.cache
+C:\Users\user\Desktop\graph_visual-master\GraphVisual\obj\Debug\GraphVisual.DrawingSpace.resources
+C:\Users\user\Desktop\graph_visual-master\GraphVisual\obj\Debug\GraphVisual.frmMain.resources
+C:\Users\user\Desktop\graph_visual-master\GraphVisual\obj\Debug\GraphVisual.Properties.Resources.resources
+C:\Users\user\Desktop\graph_visual-master\GraphVisual\obj\Debug\GraphVisual.csproj.GenerateResource.cache
+C:\Users\user\Desktop\graph_visual-master\GraphVisual\obj\Debug\GraphVisual.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\graph_visual-master\GraphVisual\obj\Debug\GraphVisual.exe
+C:\Users\user\Desktop\graph_visual-master\GraphVisual\obj\Debug\GraphVisual.pdb
+C:\Users\user\Desktop\graph_visual-master\GraphVisual\bin\Debug\GraphVisual.exe.config
+C:\Users\user\Desktop\graph_visual-master\GraphVisual\bin\Debug\GraphVisual.exe
+C:\Users\user\Desktop\graph_visual-master\GraphVisual\bin\Debug\GraphVisual.pdb
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\bin\Debug\GraphVisual.exe.config
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\bin\Debug\GraphVisual.exe
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\bin\Debug\GraphVisual.pdb
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\obj\Debug\GraphVisual.csprojAssemblyReference.cache
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\obj\Debug\GraphVisual.DrawingSpace.resources
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\obj\Debug\GraphVisual.frmMain.resources
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\obj\Debug\GraphVisual.Properties.Resources.resources
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\obj\Debug\GraphVisual.csproj.GenerateResource.cache
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\obj\Debug\GraphVisual.csproj.CoreCompileInputs.cache
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\obj\Debug\GraphVisual.exe
+C:\Users\user\Documents\Visual Studio 2017\Projects\PRISAnalyzer\GraphVisual\obj\Debug\GraphVisual.pdb

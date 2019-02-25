@@ -1,42 +1,30 @@
-﻿using System;
+﻿using GraphVisual.GraphD;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GraphVisual.GraphD;
-using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace GraphVisual.Algorithm
 {
-    class ViaSimilarity : IAlgorithm
+    internal class ViaSimilarity : IAlgorithm
     {
-        Dictionary<Edge, double> edgeBetweenness;
-        CommunityStructure Cs;
-        DGraph graph;
-
-        double _BestQ, Q;
+        private readonly Dictionary<Edge, double> edgeBetweenness;
+        private readonly CommunityStructure Cs;
+        private DGraph graph;
+        private double _BestQ;
+        private readonly double Q;
 
         public double BestQ
         {
-            get { return _BestQ; }
-            set { _BestQ = value; }
-        }
-
-        private RichTextBox _Log;
-
-        public RichTextBox Log
-        {
-            get { return _Log; }
-            set { _Log = value; }
+            get => _BestQ;
+            set => _BestQ = value;
         }
 
         private void WriteLog(string log = "")
         {
-            _Log.Text += log + "\r\n";
-            _Log.Refresh();
+            Debug.WriteLine(log);
         }
 
-        struct Similarity
+        private struct Similarity
         {
             public Node node;
             public double similarity;
@@ -44,23 +32,17 @@ namespace GraphVisual.Algorithm
 
         public CommunityStructure FindCommunityStructure(DGraph pGraph)
         {
-            // Clone graph này ra để xử lý
             graph = pGraph.Clone();
 
-            // Cộng đồng
             CommunityStructure tempCS = GetCommunityStructure();
 
-            // Số cộng đồng
             int initCount = tempCS.Count;
             int countCommunity = initCount;
 
-            // Tinh similarity cua tat ca cac node 
             Dictionary<Node, List<Similarity>> hashMaxSimilarityNode = new Dictionary<Node, List<Similarity>>();
 
-            // mỗi đỉnh là một community
-            foreach(Node node in graph.Nodes)
+            foreach (Node node in graph.Nodes)
             {
-                // tinh similarity 
                 if (node.AdjacencyNodes.Count > 0)
                 {
                     List<Similarity> lst = new List<Similarity>();
@@ -68,52 +50,50 @@ namespace GraphVisual.Algorithm
                     double max = double.MinValue;
                     foreach (Node neighborNode in node.AdjacencyNodes)
                     {
-                        Similarity s = new Similarity();
-                        s.node = neighborNode;
-                        s.similarity = ZLZSimilarity(node, neighborNode);
+                        Similarity s = new Similarity
+                        {
+                            node = neighborNode,
+                            similarity = ZLZSimilarity(node, neighborNode)
+                        };
 
                         lst.Add(s);
 
-                        if(s.similarity > max)
+                        if (s.similarity > max)
                         {
                             max = s.similarity;
                         }
                     }
 
-                    // xử lý cái list đó trước rồi mới add vào
                     int n = lst.Count;
-                    for(int i = 0; i < n; i++)
+                    for (int i = 0; i < n; i++)
                     {
-                        if(lst[i].similarity < max)
+                        if (lst[i].similarity < max)
                         {
                             lst.RemoveAt(i);
                             n--;
                             i--;
                         }
                     }
-                    
-                    if(lst.Count >= 2)
-                    {
 
+                    if (lst.Count >= 2)
+                    {
                     }
 
-                    // add cái list này vào danh sách
                     hashMaxSimilarityNode.Add(node, lst);
                 }
 
-                // khoi tao cong dong
                 DGraph com = new DGraph();
                 com.Nodes.Add(node);
                 tempCS.Add(com);
             }
 
-            // chọn nút bất kì 
             Random r = new Random();
             int nodeNumber = r.Next(0, graph.Nodes.Count);
             Node initNode = graph.Nodes[nodeNumber];
-            
-            return this.Cs;
+
+            return Cs;
         }
+
         private CommunityStructure GetCommunityStructure()
         {
             CommunityStructure cs = new CommunityStructure();
@@ -160,12 +140,15 @@ namespace GraphVisual.Algorithm
 
         private double ZLZSimilarity(Node a, Node b)
         {
-            if (!a.AdjacencyNodes.Contains(b)) return 0;
+            if (!a.AdjacencyNodes.Contains(b))
+            {
+                return 0;
+            }
 
             double z = 0f;
             List<Node> commonNeighbors = FindCommonNeighbors(a, b);
 
-            foreach(Node c in commonNeighbors)
+            foreach (Node c in commonNeighbors)
             {
                 z += (1.0 / c.AdjacencyNodes.Count);
             }
@@ -177,14 +160,20 @@ namespace GraphVisual.Algorithm
         {
             List<Node> commonNodes = new List<Node>();
 
-            foreach(Node c in a.AdjacencyNodes)
+            foreach (Node c in a.AdjacencyNodes)
             {
-                if (!commonNodes.Contains(c) && b.AdjacencyNodes.Contains(c)) commonNodes.Add(c);
+                if (!commonNodes.Contains(c) && b.AdjacencyNodes.Contains(c))
+                {
+                    commonNodes.Add(c);
+                }
             }
 
-            foreach(Node c in b.AdjacencyNodes)
+            foreach (Node c in b.AdjacencyNodes)
             {
-                if (!commonNodes.Contains(c) && a.AdjacencyNodes.Contains(c)) commonNodes.Add(c);
+                if (!commonNodes.Contains(c) && a.AdjacencyNodes.Contains(c))
+                {
+                    commonNodes.Add(c);
+                }
             }
 
             return commonNodes;

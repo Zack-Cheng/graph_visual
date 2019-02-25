@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using GraphVisual.GraphD;
+using System;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GraphVisual.GraphD;
-using System.Windows.Forms;
 
 namespace GraphVisual.Algorithm
 {
@@ -15,30 +12,21 @@ namespace GraphVisual.Algorithm
             return _NewAlgorithm(pGraph);
         }
 
-        double _BestQ, Q;
+        private double _BestQ, Q;
 
         public double BestQ
         {
-            get { return _BestQ; }
-            set { _BestQ = value; }
-        }
-
-        private RichTextBox _Log;
-
-        public RichTextBox Log
-        {
-            get { return _Log; }
-            set { _Log = value; }
+            get => _BestQ;
+            set => _BestQ = value;
         }
 
         private void WriteLog(string log = "")
         {
-            _Log.Text += log + "\r\n";
-            _Log.Refresh();
+            Debug.WriteLine(log);
         }
 
-        DGraph graph;
-        int VisitedNodeCount = 0;
+        private DGraph graph;
+        private readonly int VisitedNodeCount = 0;
 
         public CommunityStructure Cs;
 
@@ -59,7 +47,6 @@ namespace GraphVisual.Algorithm
                     }
                 }
 
-                // Tính Q
                 Q = CalculateModularity(tempCS, pGraph);
                 if (Q > _BestQ)
                 {
@@ -92,8 +79,8 @@ namespace GraphVisual.Algorithm
             int numEdge = pOriginalGraph.Edges.Count;
             foreach (DGraph csItem in pCs)
             {
-                int l = 0; // tong bac cua dinh trong c, theo do thi moi => suy ra so canh
-                int d = 0; // tong bac
+                int l = 0;
+                int d = 0;
                 foreach (Node node in csItem.Nodes)
                 {
                     l += node.AdjacencyNodes.Count;
